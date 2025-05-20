@@ -128,14 +128,15 @@ def extract_health_data(query):
     Calculates the heart disease risk based on age, cholesterol level, and blood pressure.
     Returns a risk category (e.g., Low, Medium, High).
     """
-    # query = "52 years old, cholesterol is 230 ,blood pressure is 145?"
-    normalized_query = query.lower().replace(",", "")
-    am = re.search(r'(\d{2,3})\s*years?\s*old', normalized_query)
-    cm= re.search(r'cholesterol\s*is\s*(\d{2,3})', normalized_query)
-    bm = re.search(r'blood\s*pressure\s*is\s*(\d{2,3})', normalized_query)
-    age = int(am.group(1))
-    cholesterol = int(cm.group(1))
-    blood_pressure = int(bm.group(1))
+    # query = "age=52,cholesterol=230,blood_pressure=145"
+    parts = {}
+    for part in query.split(','):
+        if '=' in part:
+            key, value = part.split('=')
+            parts[key.strip()] = float(value.strip())
+    age = parts.get("age")
+    cholesterol = parts.get("cholesterol")
+    blood_pressure = parts.get("blood_pressure")
     result = health_risk_calculator(age=age, cholesterol=cholesterol, blood_pressure=bp)
     return result
 
